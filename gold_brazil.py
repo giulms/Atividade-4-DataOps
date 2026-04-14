@@ -6,11 +6,6 @@ WAREHOUSE_PATH = "data/warehouse"
 
 
 def build_spark_session() -> SparkSession:
-    """
-    Build and return a SparkSession configured with the Iceberg catalog.
-
-    Uses a local Hadoop-based Iceberg catalog stored at WAREHOUSE_PATH.
-    """
     return (
         SparkSession.builder
         .appName("gold-brazil-airports")
@@ -30,13 +25,6 @@ def build_spark_session() -> SparkSession:
 
 
 def main():
-    """
-    Entry point for the Gold Brazil airports job.
-
-    Reads the Silver Iceberg table, filters to Brazilian airports only,
-    selects the relevant columns for consumption, and writes the result
-    to the Iceberg table local.gold.airports_br.
-    """
     spark = build_spark_session()
 
     spark.sql("CREATE NAMESPACE IF NOT EXISTS local.gold")

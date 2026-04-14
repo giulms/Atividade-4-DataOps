@@ -7,11 +7,7 @@ WAREHOUSE_PATH = "data/warehouse"
 
 
 def build_spark_session() -> SparkSession:
-    """
-    Build and return a SparkSession configured with the Iceberg catalog.
-
-    Uses a local Hadoop-based Iceberg catalog stored at WAREHOUSE_PATH.
-    """
+    
     return (
         SparkSession.builder
         .appName("silver-airports-iceberg")
@@ -31,16 +27,7 @@ def build_spark_session() -> SparkSession:
 
 
 def transform_bronze_to_silver(df):
-    """
-    Apply Silver-layer transformations to a Bronze DataFrame.
-
-    Casts numeric and timestamp columns to their proper types, filters out
-    rows with null airport_id or non-airport type entries, and deduplicates
-    by airport_id to ensure one canonical record per airport.
-
-    :param df: Raw Bronze DataFrame read from Parquet.
-    :return: Cleaned and typed Silver DataFrame.
-    """
+    
     return (
         df
         .withColumn("airport_id", F.col("airport_id").cast("int"))
@@ -57,12 +44,7 @@ def transform_bronze_to_silver(df):
 
 
 def main():
-    """
-    Entry point for the Silver Iceberg job.
-
-    Reads all Bronze Parquet data, applies Silver transformations, and
-    writes the result to an Iceberg table at local.silver.airports.
-    """
+    
     spark = build_spark_session()
 
     spark.sql("CREATE NAMESPACE IF NOT EXISTS local.silver")

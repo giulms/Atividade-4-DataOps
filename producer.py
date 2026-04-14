@@ -35,24 +35,14 @@ COLUMNS = [
 
 
 def normalize_value(value: str):
-    """
-    Normalize a raw CSV field value.
-
-    Converts the sentinel '\\N' (used in OpenFlights dataset to represent NULL)
-    to Python None; otherwise returns the value as-is.
-    """
+    
     if value == r"\N":
         return None
     return value
 
 
 def chunked(iterable, chunk_size: int):
-    """
-    Yield successive fixed-size chunks from an iterable.
-
-    :param iterable: Any iterable to split into chunks.
-    :param chunk_size: Number of items per chunk.
-    """
+    
     chunk = []
     for item in iterable:
         chunk.append(item)
@@ -64,12 +54,7 @@ def chunked(iterable, chunk_size: int):
 
 
 def load_dataset_rows():
-    """
-    Fetch the airports dataset from OpenFlights and yield one dict per valid row.
-
-    Security note: uses a fixed, trusted URL with a timeout to prevent
-    indefinite blocking. raise_for_status() surfaces HTTP errors immediately.
-    """
+    
     response = requests.get(DATASET_URL, timeout=60)
     response.raise_for_status()
     content = response.text
@@ -86,12 +71,7 @@ def load_dataset_rows():
 
 
 def main():
-    """
-    Entry point for the Kafka producer.
-
-    Reads the airports dataset and publishes records to the Kafka topic in
-    fixed-size chunks with configurable delays to simulate a fragmented stream.
-    """
+    
     producer = KafkaProducer(
         bootstrap_servers=BOOTSTRAP_SERVERS,
         value_serializer=lambda value: json.dumps(value).encode("utf-8"),
